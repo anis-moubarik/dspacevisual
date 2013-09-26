@@ -15,7 +15,7 @@
         this.name = name;
       };
 
-function() {
+(function() {
   function init(){
           var communities = new Array();
           var collections = new Array();
