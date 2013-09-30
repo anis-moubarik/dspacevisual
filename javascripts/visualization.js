@@ -45,7 +45,6 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
         if(user.id > howMany)
           howMany = user.id
         var emailDomain = user.email.replace(/.*@/, "");
-        dataForEmail.labels.push(emailDomain)
         emails[emailDomain] = emails[emailDomain] == undefined ? 1 : emails[emailDomain]+1
         console.log(emails)
         
@@ -53,12 +52,14 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
      var emailsForChart = []
      var i = 0
      for(var key in emails){
-        emails[i] = emails[key]
+        emailsForChart[i] = emails[key]
+        dataForEmail.labels.push(key)
         i++
      }
+     dataForEmail.datasets[0].data = emailsForChart
      console.log(emailsForChart)
      console.log(howMany)
-
+     var ctx2 = $('#emailDist').get(0).getContext("2d")
      var ctx = $('#usersChart').get(0).getContext("2d")
      var data = {
           labels : ["Users"],
@@ -75,8 +76,15 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
           scaleSteps : (howMany+10)/(howMany/2),
           scaleStepWidth : howMany/2,
           scaleStartValue : 0
-        }
+     }
+     var opt2 = {
+        scaleOverride : true,
+        scaleSteps : 6,
+        scaleStepWidth : 1,
+        scaleStartValue : 0
+     }
      new Chart(ctx).Bar(data, opt1);
+     new Chart(ctx2).Radar(dataForEmail, opt2)
     });
   }
   function fun(){
