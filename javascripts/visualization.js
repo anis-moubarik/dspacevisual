@@ -9,12 +9,10 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
     $.getJSON(DSPACE_INSTANCE+"rootcommunities?media=json", function(data){
       communities = data
     }).done(function(){//Iterate through communities to save collections
-      $.each(communities, function(index, data){
-        $.getJSON(DSPACE_INSTANCE+"community/"+data.id+"/collections?media=json", function(col){
-          $.each(col, function(index, col){
+        $.getJSON(DSPACE_INSTANCE+"collections", function(cols){
+          $.each(cols, function(index, col){
             collections.push(col)
           });
-        })
         });
       })
     function isTitle(element){
@@ -107,6 +105,7 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
       for(var i = 0; i < collections.length; i++){
         var name = collections[i].collectionName
         labelsForChart2[i] = name
+        console.log(name)
         dataForChart2[i] = mo[name]
       }
       
