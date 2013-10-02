@@ -1,6 +1,8 @@
 console.log("visualization.js loaded")
 
-DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
+DSPACE_INSTANCE = localStorage.getItem("dspace_url") == null ? "http://ds-am2-kktest.lib.helsinki.fi/simplerest/" : localStorage.getItem("dspace_url");
+
+var communitiesls;
 
 (function (){
   function init(){
@@ -8,16 +10,16 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
     //Stary by getting rootcommunities from the DSpace instance
     $.getJSON(DSPACE_INSTANCE+"rootcommunities?media=json", function(data){
       communities = data
-    }).done(function(){//Iterate through communities to save collections
-        $.getJSON(DSPACE_INSTANCE+"collections", function(cols){
-          $.each(cols, function(index, col){
-            collections.push(col)
-          });
-        });
-      })
+    });
+
     function isTitle(element){
       return element.element == "title" ? element : null
     }
+    collectionget = $.getJSON(DSPACE_INSTANCE+"collections", function(cols){
+      $.each(cols, function(index, col){
+        collections.push(col)
+      })
+    });
     itemget = $.getJSON(DSPACE_INSTANCE+"items", function(data){
       items = data;
     });
@@ -25,6 +27,16 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
       users = data;
     });
   }
+  
+  function initLs(){
+    userget.complete(function(){
+      localStorage.setItem("users", JSON.stringify(users));
+    });
+    if(localStorage.getItem("users") != null){
+      users = JSON.parse(localStorage.getItem("users"))
+    }
+  }
+
   function visualizeUsers(){
     userget.complete(function(){
     var emails = new Array();
@@ -193,7 +205,7 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
      }).complete(function(){
         setTimeout(function(){
           $(".bar").css("width", "100%");
-          DSPACE_INSTANCE = "http://"+text+"/";
+          localStorage.setItem("dspace_url", "http://"+text+"/");
           $(init)
           $(fun)
         }, 3000)
@@ -206,5 +218,6 @@ DSPACE_INSTANCE = "http://ds-am2-kktest.lib.helsinki.fi/simplerest/";
 
   $(init)
   $(fun)
+  $(initLs)
   $(visualizeUsers)
 })();
