@@ -6,8 +6,7 @@ var communitiesls;
 
 (function (){
   function init(){
-    collections = new Array();
-    //Stary by getting rootcommunities from the DSpace instance
+    //Start by getting rootcommunities from the DSpace instance
     $.getJSON(DSPACE_INSTANCE+"rootcommunities?media=json", function(data){
       communities = data
     });
@@ -15,23 +14,27 @@ var communitiesls;
     function isTitle(element){
       return element.element == "title" ? element : null
     }
+
     collectionget = $.getJSON(DSPACE_INSTANCE+"collections", function(cols){
-      $.each(cols, function(index, col){
-        collections.push(col)
-      })
+      collections = cols;
     });
     itemget = $.getJSON(DSPACE_INSTANCE+"items", function(data){
       items = data;
     });
-    userget = $.getJSON(DSPACE_INSTANCE+"users", function(data){
-      users = data;
-    });
+    userget = null
+    if(localStorage.getItem("users") == null){
+      userget = $.getJSON(DSPACE_INSTANCE+"users", function(data){
+        users = data;
+      });
+    }
   }
   
   function initLs(){
-    userget.complete(function(){
-      localStorage.setItem("users", JSON.stringify(users));
-    });
+    if(userget != null){
+        userget.complete(function(){
+        localStorage.setItem("users", JSON.stringify(users));
+      });
+    }
     if(localStorage.getItem("users") != null){
       users = JSON.parse(localStorage.getItem("users"))
     }
