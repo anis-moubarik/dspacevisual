@@ -18,19 +18,21 @@ var communitiesls;
     }
     collectionget = null
     if(localStorage.getItem("collections") == null){
+      console.log("localStorage invalidated, loading collections");
       collectionget = $.getJSON(DSPACE_INSTANCE+"collections", function(cols){
         collections = cols;
       });
     }
     itemget = null
     if(localStorage.getItem("items") == null){
-      console.log("load items");
+      console.log("localStorage invalidated, loading items");
       itemget = $.getJSON(DSPACE_INSTANCE+"items", function(data){
         items = data;
       });
     }
     userget = null
     if(localStorage.getItem("users") == null){
+      console.log("localStorage invalidated, loading users");
       userget = $.getJSON(DSPACE_INSTANCE+"users", function(data){
         users = data;
       });
