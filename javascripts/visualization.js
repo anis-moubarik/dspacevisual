@@ -225,6 +225,7 @@ var communitiesls;
   });
   
   function testSimpleRest(text){
+    localStorage.clear();
    $.getJSON("http://"+text+"/rootcommunities?media=json", function(data){
     $(".bar").parent().fadeIn(1000)
     $(".bar").css("width", "0%")
