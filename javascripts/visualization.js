@@ -7,9 +7,11 @@ var communitiesls;
 (function (){
   function init(){
     //Start by getting rootcommunities from the DSpace instance
-    $.getJSON(DSPACE_INSTANCE+"rootcommunities?media=json", function(data){
-      communities = data
-    });
+    if($.cookie('lsInvalidate') == undefined){
+      $.getJSON(DSPACE_INSTANCE+"rootcommunities?media=json", function(data){
+        communities = data
+      });
+    }
 
     function isTitle(element){
       return element.element == "title" ? element : null
@@ -22,6 +24,7 @@ var communitiesls;
     }
     itemget = null
     if(localStorage.getItem("items") == null){
+      console.log("load items");
       itemget = $.getJSON(DSPACE_INSTANCE+"items", function(data){
         items = data;
       });
@@ -200,6 +203,11 @@ var communitiesls;
 
   //Button event listener
   $(document).ready(function(){
+    var invalidateCache = $.cookie('lsInvalidate');
+    if(invalidateCache == undefined){
+      localStorage.clear();
+      $.cookie('lsInvalidate', false, {expires: 1});
+    }
     $('.bar').parent().hide()
     $('#submitBtn').click(function(event){
       event.preventDefault()
