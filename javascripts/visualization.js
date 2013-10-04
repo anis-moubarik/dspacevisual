@@ -88,24 +88,25 @@ var communitiesls;
       }
       ]
     }
+
+    //Iterate through users and add domains to key-value array and increment by one if it's already found
     $.each(users, function(index, user){
       if(user.id > howMany)
         howMany = user.id
       var emailDomain = user.email.replace(/.*@/, "");
       emails[emailDomain] = emails[emailDomain] == undefined ? 1 : emails[emailDomain]+1
-      console.log(emails)
-
     });
     var emailsForChart = []
     var i = 0
+
+    //Go through the keys in emails array and put it to the new array and push the label to graph data
     for(var key in emails){
       emailsForChart[i] = emails[key]
       dataForEmail.labels.push(key)
       i++
     }
     dataForEmail.datasets[0].data = emailsForChart
-    console.log(emailsForChart)
-    console.log(howMany)
+
     var ctx2 = $('#emailDist').get(0).getContext("2d")
     var ctx = $('#usersChart').get(0).getContext("2d")
     var data = {
@@ -134,17 +135,41 @@ var communitiesls;
     new Chart(ctx2).Radar(dataForEmail, opt2)
   }
   function fun(){
+    //I'm very sorry for this
     var jee = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0}
     var mo = new Array()
+    var lang = new Array();
+    var smart = {
+      labels : [],
+      datasets : [
+        {
+          fillColor : "rgba(151,187,205,0.5)",
+          strokeColor : "rgba(151,187,205,1)",
+          data : []
+        }
+      ]
+    }
     $.each(items, function(index, item){
       var dateString = item.metadata.filter(isIssued)[0].value
       mo[item.collections[0]] = mo[item.collections[0]] == undefined ? 1 : mo[item.collections[0]]+1
       date = new Date(Date.parse(dateString))
       jee[date.getMonth()] = jee[date.getMonth()]+1
+
+      //add languages
+      joo = item
+      var langString = item.metadata.filter(isLang)[0] == undefined ? "none" : item.metadata.filter(isLang)[0].value
+      lang[langString] = lang[langString] == undefined ? 1 : lang[langString]+1;
+      console.log(lang)
     });
+    for(l in lang){
+      smart.labels.push(l)
+      smart.datasets[0].data.push(lang[l])
+    }
+    console.log(smart)
     var dataForChart = new Array()
     var dataForChart2 = new Array()
     var labelsForChart2 = new Array()
+    //Hemmetti, ku muistais mistä tää 12 tulee
     for(var i = 0; i < 12; i++){
       dataForChart[i] = jee[i]
     }
@@ -197,10 +222,18 @@ var communitiesls;
       scaleStartValue : 0
     }
     new Chart(ctx2).Bar(data2, opt)
+
+    var ctx3 = $('#languageDist').get(0).getContext("2d")
+
+    new Chart(ctx3).Bar(smart, opt);
   }//End Fun()
 
   function isIssued(element){
     return element.qualifier == "issued" ? element : null
+  }
+
+  function isLang(element){
+    return element.element == "language" ? element : null
   }
 
   //Button event listener
