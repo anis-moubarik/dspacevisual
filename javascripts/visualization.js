@@ -209,7 +209,7 @@ var communitiesls;
     var ctx = $('#myChart').get(0).getContext("2d")
     var opt1 = {
       scaleOverride : true,
-      scaleSteps : 7,
+      scaleSteps : 20,
       scaleStepWidth : 1,
       scaleStartValue : 0
     }
@@ -217,8 +217,8 @@ var communitiesls;
     var ctx2 = $('#collectionsChart').get(0).getContext("2d")
     var opt = {
       scaleOverride : true,
-      scaleSteps : 22,
-      scaleStepWidth : 1,
+      scaleSteps : 15,
+      scaleStepWidth : 2,
       scaleStartValue : 0
     }
     new Chart(ctx2).Bar(data2, opt)
